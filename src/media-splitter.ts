@@ -1,6 +1,13 @@
 // ref: https://www.youtube.com/watch?v=HPmlGVwd-Fo
 import ffmpeg from "fluent-ffmpeg";
+import * as fs from "fs";
 import { SplitMediaProps } from "./types";
+
+const createDir = (path: string) => {
+  if (!fs.existsSync(path)) {
+    fs.mkdirSync(path);
+  }
+};
 
 const createMedia = (
   inputFile: string,
@@ -21,7 +28,7 @@ const createMedia = (
     .run();
 };
 
-const splitMedia = ({
+export const splitMedia = ({
   inputFile,
   outputDir,
   outputFileName,
@@ -35,10 +42,11 @@ const splitMedia = ({
     }
 
     const { duration } = metaData.format;
-
     if (!duration) {
       throw Error("does not exist duration");
     }
+
+    createDir(outputDir);
 
     const totalFileLength = Math.ceil(duration / splitDurationMs);
 
@@ -53,5 +61,3 @@ const splitMedia = ({
     }
   });
 };
-
-export { splitMedia };
