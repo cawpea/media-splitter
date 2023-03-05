@@ -14,7 +14,9 @@ const createMedia = (
     .inputOptions([`-ss ${startingTime}`])
     .outputOptions([`-t ${duration}`])
     .output(`${outputDir}/${fileName}`)
-    .on("end", () => console.log(`created ${outputDir}/${fileName}`))
+    .on("end", () =>
+      console.log(`media-splitter: created ${outputDir}/${fileName}`)
+    )
     .on("error", (err) => console.error(err))
     .run();
 };
@@ -22,6 +24,7 @@ const createMedia = (
 const splitMedia = ({
   inputFile,
   outputDir,
+  outputFileName,
   splitDurationMs,
 }: SplitMediaProps) => {
   ffmpeg.ffprobe(inputFile, (err, metaData) => {
@@ -45,7 +48,7 @@ const splitMedia = ({
         outputDir,
         i * splitDurationMs,
         splitDurationMs,
-        `sample-${i}.mp4`
+        outputFileName(i)
       );
     }
   });
