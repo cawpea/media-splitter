@@ -1,13 +1,10 @@
 // ref: https://www.youtube.com/watch?v=HPmlGVwd-Fo
 import ffmpeg from "fluent-ffmpeg";
-
-const inputFile = `${__dirname}/input/sample.mp4`;
-const outputDir = `${__dirname}/dist`;
-
-// NOTE: 分割する際の1つの動画あたりの秒数
-const splitDuration = 600;
+import { SplitMediaProps } from "./types";
 
 const createMedia = (
+  inputFile: string,
+  outputDir: string,
   startingTime: number,
   duration: number,
   fileName: string
@@ -22,19 +19,36 @@ const createMedia = (
     .run();
 };
 
-export const splitMedia = () => {
+const splitMedia = ({
+  inputFile,
+  outputDir,
+  splitDurationMs,
+}: SplitMediaProps) => {
   ffmpeg.ffprobe(inputFile, (err, metaData) => {
-    console.log("ffprobe", metaData);
+    if (err) throw err;
+
+    if (!metaData) {
+      throw Error("could not get metadata from input file");
+    }
+
     const { duration } = metaData.format;
 
     if (!duration) {
       throw Error("does not exist duration");
     }
 
-    const totalFileLength = Math.ceil(duration / splitDuration);
+    const totalFileLength = Math.ceil(duration / splitDurationMs);
 
     for (let i = 0; i < totalFileLength; i++) {
-      createMedia(i * splitDuration, splitDuration, `sample-${i}.mp4`);
+      createMedia(
+        inputFile,
+        outputDir,
+        i * splitDurationMs,
+        splitDurationMs,
+        `sample-${i}.mp4`
+      );
     }
   });
 };
+
+export { splitMedia };
