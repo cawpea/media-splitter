@@ -1,1 +1,3 @@
-console.log("Hello! Node.js × TypeScript");
+import { splitMedia } from "./media-split";
+
+splitMedia();

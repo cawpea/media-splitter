@@ -19,10 +19,12 @@
   },
   "homepage": "https://github.com/cawpea/media-split-node#readme",
   "dependencies": {
+    "fluent-ffmpeg": "^2.1.2",
     "ts-node": "^10.9.1",
     "typescript": "^4.9.5"
   },
   "devDependencies": {
+    "@types/fluent-ffmpeg": "^2.1.21",
     "@types/node": "^18.14.6"
   }
 }
