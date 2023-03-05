@@ -1,7 +1,26 @@
+// ref: https://www.youtube.com/watch?v=HPmlGVwd-Fo
 import ffmpeg from "fluent-ffmpeg";
 
-const inputFile = `${__dirname}/data/sample.mp4`;
-const outputDir = `${__dirname}/data`;
+const inputFile = `${__dirname}/input/sample.mp4`;
+const outputDir = `${__dirname}/dist`;
+
+// NOTE: 分割する際の1つの動画あたりの秒数
+const splitDuration = 600;
+
+const createMedia = (
+  startingTime: number,
+  duration: number,
+  fileName: string
+) => {
+  ffmpeg()
+    .input(inputFile)
+    .inputOptions([`-ss ${startingTime}`])
+    .outputOptions([`-t ${duration}`])
+    .output(`${outputDir}/${fileName}`)
+    .on("end", () => console.log(`created ${outputDir}/${fileName}`))
+    .on("error", (err) => console.error(err))
+    .run();
+};
 
 export const splitMedia = () => {
   ffmpeg.ffprobe(inputFile, (err, metaData) => {
@@ -12,16 +31,10 @@ export const splitMedia = () => {
       throw Error("does not exist duration");
     }
 
-    const startingTime = duration / 2;
-    const clipDuration = 5;
+    const totalFileLength = Math.ceil(duration / splitDuration);
 
-    ffmpeg()
-      .input(inputFile)
-      .inputOptions([`-ss ${startingTime}`])
-      .outputOptions([`-t ${clipDuration}`])
-      .output(`${outputDir}/sample2.mp4`)
-      .on("end", () => console.log("Done!"))
-      .on("error", (err) => console.error(err))
-      .run();
+    for (let i = 0; i < totalFileLength; i++) {
+      createMedia(i * splitDuration, splitDuration, `sample-${i}.mp4`);
+    }
   });
 };
