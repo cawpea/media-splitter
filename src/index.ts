@@ -3,11 +3,7 @@ import { splitMedia } from "./media-splitter";
 
 program
   .option("-i, --input <optionValue>", "読み込むファイル")
-  .option(
-    "-o, --output <optionValue>",
-    "出力先のディレクトリ",
-    "./media-splitter"
-  )
+  .option("-o, --output <optionValue>", "出力先のディレクトリ", "./dist")
   .option(
     "-n, --name <optionValue>",
     "出力されるファイル名（デフォルトではinputのファイル名に連番を付与します）"
@@ -17,7 +13,7 @@ program.parse();
 
 const options = program.opts();
 
-console.log("input", options);
+console.log("media-splitter: ", options);
 
 splitMedia({
   inputFile: options.input,

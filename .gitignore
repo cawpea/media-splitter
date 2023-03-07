@@ -1,5 +1,5 @@
 node_modules
 
 # サンプル動画
-src/input/*
-src/dist/*
+input/*
+dist/*
