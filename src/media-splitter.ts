@@ -16,14 +16,14 @@ const createMedia = (
   duration: number,
   fileName: string
 ) => {
+  const outputFilePath = `${outputDir}/${fileName}`;
+
   ffmpeg()
     .input(inputFile)
     .inputOptions([`-ss ${startingTime}`])
     .outputOptions([`-t ${duration}`])
-    .output(`${outputDir}/${fileName}`)
-    .on("end", () =>
-      console.log(`media-splitter: created ${outputDir}/${fileName}`)
-    )
+    .output(outputFilePath)
+    .on("end", () => console.log(`media-splitter: created ${outputFilePath}`))
     .on("error", (err) => console.error(err))
     .run();
 };
@@ -34,6 +34,9 @@ export const splitMedia = ({
   outputFileName,
   splitDurationMs,
 }: SplitMediaProps) => {
+  const inputFileName = inputFile.split("/").pop()?.split(".")[0] ?? "";
+  const inputFileExt = inputFile.split(".").pop();
+
   ffmpeg.ffprobe(inputFile, (err, metaData) => {
     if (err) throw err;
 
@@ -56,7 +59,7 @@ export const splitMedia = ({
         outputDir,
         i * splitDurationMs,
         splitDurationMs,
-        outputFileName(i)
+        `${outputFileName(i, inputFileName)}.${inputFileExt}`
       );
     }
   });
