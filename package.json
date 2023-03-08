@@ -1,23 +1,25 @@
 {
-  "name": "media-split-node",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "media-splitter",
+  "version": "0.1.0",
+  "description": "the library to split media file like video and audio",
+  "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "exec": "ts-node ./src/index.ts"
+    "exec": "ts-node ./src/index.ts",
+    "build": "tsc -p .",
+    "prepare": "npm run build"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cawpea/media-split-node.git"
+    "url": "git+https://github.com/cawpea/media-splitter.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/cawpea/media-split-node/issues"
+    "url": "https://github.com/cawpea/media-splitter/issues"
   },
-  "homepage": "https://github.com/cawpea/media-split-node#readme",
+  "homepage": "https://github.com/cawpea/media-splitter#readme",
   "dependencies": {
     "commander": "^10.0.0",
     "fluent-ffmpeg": "^2.1.2",

@@ -3,3 +3,4 @@ node_modules
 # サンプル動画
 input/*
 dist/*
+media-splitter-dist/*
