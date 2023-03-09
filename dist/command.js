@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const commander_1 = require("commander");
 const media_splitter_1 = require("./media-splitter");
 commander_1.program
-    .option("-i, --input <optionValue>", "file path of media")
+    .option("-i, --input", "file path of media")
     .option("-o, --output <optionValue>", "directory path of output", "./media-splitter-dist")
     .option("-n, --name <optionValue>", "name of output file, it's assigned sequential numbers automatically")
     .option("-s, --split <optionValue>", "duration to split media file", "600");
