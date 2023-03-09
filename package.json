@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "exec": "ts-node ./src/index.ts",
-    "build": "tsc -p .",
+    "build": "tsc -p . -d",
     "prepare": "npm run build"
   },
   "repository": {
