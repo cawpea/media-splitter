@@ -2,17 +2,17 @@ import { program } from "commander";
 import { splitMedia } from "./media-splitter";
 
 program
-  .option("-i, --input <optionValue>", "読み込むファイル")
+  .option("-i, --input <optionValue>", "file path of media")
   .option(
     "-o, --output <optionValue>",
-    "出力先のディレクトリ",
+    "directory path of output",
     "./media-splitter-dist"
   )
   .option(
     "-n, --name <optionValue>",
-    "出力されるファイル名（デフォルトではinputのファイル名に連番を付与します）"
+    "name of output file, it's assigned sequential numbers automatically"
   )
-  .option("-s, --split <optionValue>", "分割単位のミリ秒", "600");
+  .option("-s, --split <optionValue>", "duration to split media file", "600");
 program.parse();
 
 const options = program.opts();
@@ -26,3 +26,5 @@ splitMedia({
     options.name ? `${options.name}-${index}` : `${defaultName}-${index}`,
   splitDurationMs: Number(options.split),
 });
+
+export * from "./media-splitter";
