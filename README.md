@@ -26,5 +26,5 @@ splitMedia({
 and You can also use it by command.
 
 ```sh
-$ npx media-splitter -- -i ./sample.mp4
+$ npx media-splitter -i ./sample.mp4
 ```
