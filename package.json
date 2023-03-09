@@ -1,9 +1,10 @@
 {
   "name": "media-splitter",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "the library to split media file like video and audio",
   "main": "dist/index.js",
-  "main": "dist/index",
+  "types": "dist/index.d.ts",
+  "bin": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "exec": "ts-node ./src/index.ts",
