@@ -1,6 +1,6 @@
 {
   "name": "media-splitter",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "the library to split media file like video and audio",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

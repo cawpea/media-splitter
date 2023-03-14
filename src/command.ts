@@ -3,7 +3,7 @@ import { program } from "commander";
 import { splitMedia } from "./media-splitter";
 
 program
-  .option("-i, --input", "file path of media")
+  .option("-i, --input <optionValue>", "file path of media")
   .option(
     "-o, --output <optionValue>",
     "directory path of output",
