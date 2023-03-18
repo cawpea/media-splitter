@@ -4,8 +4,20 @@ The library to split media file like video and audio
 
 ## Installation
 
+You need to install `ffmpeg` to use this package.
+
 ```sh
+$ brew install ffmpeg
+```
+
+Install npm package if you use this package in Node.js.
+
+```sh
+# as a local package
 $ npm install media-splitter
+
+# as a global package
+$ npm install -g media-splitter
 ```
 
 ## Usage
