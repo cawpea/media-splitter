@@ -38,9 +38,9 @@ const createMedia = (
 
 export const splitMedia = async ({
   inputFile,
-  outputDir,
-  outputFileName,
-  splitDurationMs,
+  outputDir = "media-splitter-dist",
+  outputFileName = (index, defaultName) => `${defaultName}-${index}`,
+  splitDurationMs = 600,
   onProgress,
   onComplete,
   onError,
