@@ -37,33 +37,57 @@ const createDir = (path) => {
 };
 const createMedia = (inputFile, outputDir, startingTime, duration, fileName) => {
     const outputFilePath = `${outputDir}/${fileName}`;
-    (0, fluent_ffmpeg_1.default)()
-        .input(inputFile)
-        .inputOptions([`-ss ${startingTime}`])
-        .outputOptions([`-t ${duration}`])
-        .output(outputFilePath)
-        .on("end", () => console.log(`media-splitter: created ${outputFilePath}`))
-        .on("error", (err) => console.error(err))
-        .run();
+    return new Promise((resolve, reject) => {
+        (0, fluent_ffmpeg_1.default)()
+            .input(inputFile)
+            .inputOptions([`-ss ${startingTime}`])
+            .outputOptions([`-t ${duration}`])
+            .output(outputFilePath)
+            .on("end", () => {
+            console.log(`media-splitter: created ${outputFilePath}`);
+            resolve({ outputFilePath });
+        })
+            .on("error", (err) => {
+            console.error(err);
+            reject();
+        })
+            .run();
+    });
 };
-const splitMedia = ({ inputFile, outputDir, outputFileName, splitDurationMs, }) => {
+const splitMedia = async ({ inputFile, outputDir = "media-splitter-dist", outputFileName = (index, defaultName) => `${defaultName}-${index}`, splitDurationMs = 600, onProgress, }) => {
     const inputFileName = inputFile.split("/").pop()?.split(".")[0] ?? "";
     const inputFileExt = inputFile.split(".").pop();
-    fluent_ffmpeg_1.default.ffprobe(inputFile, (err, metaData) => {
-        if (err)
-            throw err;
-        if (!metaData) {
-            throw Error("could not get metadata from input file");
-        }
-        const { duration } = metaData.format;
-        if (!duration) {
-            throw Error("does not exist duration");
-        }
-        createDir(outputDir);
-        const totalFileLength = Math.ceil(duration / splitDurationMs);
-        for (let i = 0; i < totalFileLength; i++) {
-            createMedia(inputFile, outputDir, i * splitDurationMs, splitDurationMs, `${outputFileName(i, inputFileName)}.${inputFileExt}`);
-        }
+    return new Promise((resolve, reject) => {
+        fluent_ffmpeg_1.default.ffprobe(inputFile, (err, metaData) => {
+            if (err)
+                throw err;
+            if (!metaData) {
+                throw Error("could not get metadata from input file");
+            }
+            const { duration } = metaData.format;
+            if (!duration) {
+                throw Error("does not exist duration");
+            }
+            createDir(outputDir);
+            const totalFileLength = Math.ceil(duration / splitDurationMs);
+            let outputFilePaths = [];
+            Array.from(Array(totalFileLength).keys()).map((i) => {
+                createMedia(inputFile, outputDir, i * splitDurationMs, splitDurationMs, `${outputFileName(i, inputFileName)}.${inputFileExt}`)
+                    .then(({ outputFilePath }) => {
+                    outputFilePaths.push(outputFilePath);
+                    if (onProgress) {
+                        onProgress(i, totalFileLength);
+                    }
+                    if (outputFilePaths.length === totalFileLength) {
+                        resolve(outputFilePaths.sort());
+                        console.log("media-splitter: completed");
+                    }
+                })
+                    .catch((e) => {
+                    reject(e);
+                });
+            });
+        });
     });
 };
 exports.splitMedia = splitMedia;

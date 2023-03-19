@@ -15,7 +15,7 @@ const createMedia = (
   startingTime: number,
   duration: number,
   fileName: string
-): Promise<void> => {
+): Promise<{ outputFilePath: string }> => {
   const outputFilePath = `${outputDir}/${fileName}`;
 
   return new Promise((resolve, reject) => {
@@ -26,7 +26,7 @@ const createMedia = (
       .output(outputFilePath)
       .on("end", () => {
         console.log(`media-splitter: created ${outputFilePath}`);
-        resolve();
+        resolve({ outputFilePath });
       })
       .on("error", (err) => {
         console.error(err);
@@ -42,9 +42,7 @@ export const splitMedia = async ({
   outputFileName = (index, defaultName) => `${defaultName}-${index}`,
   splitDurationMs = 600,
   onProgress,
-  onComplete,
-  onError,
-}: SplitMediaProps): Promise<void> => {
+}: SplitMediaProps): Promise<string[]> => {
   const inputFileName = inputFile.split("/").pop()?.split(".")[0] ?? "";
   const inputFileExt = inputFile.split(".").pop();
 
@@ -64,7 +62,7 @@ export const splitMedia = async ({
       createDir(outputDir);
 
       const totalFileLength = Math.ceil(duration / splitDurationMs);
-      let createdFileIndex = [];
+      let outputFilePaths: string[] = [];
 
       Array.from(Array(totalFileLength).keys()).map((i) => {
         createMedia(
@@ -74,20 +72,18 @@ export const splitMedia = async ({
           splitDurationMs,
           `${outputFileName(i, inputFileName)}.${inputFileExt}`
         )
-          .then(() => {
-            createdFileIndex.push(i);
+          .then(({ outputFilePath }) => {
+            outputFilePaths.push(outputFilePath);
             if (onProgress) {
               onProgress(i, totalFileLength);
             }
-            if (createdFileIndex.length === totalFileLength) {
-              if (onComplete) {
-                onComplete(totalFileLength);
-              }
+            if (outputFilePaths.length === totalFileLength) {
+              resolve(outputFilePaths.sort());
               console.log("media-splitter: completed");
             }
           })
           .catch((e) => {
-            if (onError) onError(e);
+            reject(e);
           });
       });
     });
