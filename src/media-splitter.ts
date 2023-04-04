@@ -1,7 +1,10 @@
 // ref: https://www.youtube.com/watch?v=HPmlGVwd-Fo
 import ffmpeg from "fluent-ffmpeg";
+import ffmpegPath from "@ffmpeg-installer/ffmpeg";
 import * as fs from "fs";
 import { SplitMediaProps } from "./types";
+
+ffmpeg.setFfmpegPath(ffmpegPath.path);
 
 const createDir = (path: string) => {
   if (!fs.existsSync(path)) {
