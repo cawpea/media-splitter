@@ -29,7 +29,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.splitMedia = void 0;
 // ref: https://www.youtube.com/watch?v=HPmlGVwd-Fo
 const fluent_ffmpeg_1 = __importDefault(require("fluent-ffmpeg"));
+const ffprobeStatic = __importStar(require("ffprobe-static"));
 const fs = __importStar(require("fs"));
+fluent_ffmpeg_1.default.setFfprobePath(ffprobeStatic.path);
 const createDir = (path) => {
     if (!fs.existsSync(path)) {
         fs.mkdirSync(path);
