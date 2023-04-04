@@ -54,7 +54,7 @@ const createMedia = (inputFile, outputDir, startingTime, duration, fileName) => 
             .run();
     });
 };
-const splitMedia = async ({ inputFile, outputDir = "media-splitter-dist", outputFileName = (index, defaultName) => `${defaultName}-${index}`, splitDurationMs = 600, onProgress, }) => {
+const splitMedia = async ({ inputFile, outputDir = `${__dirname}/media-splitter-dist`, outputFileName = (index, defaultName, ext) => `${defaultName}-${index}.${ext}`, splitDurationMs = 600, onProgress, }) => {
     const inputFileName = inputFile.split("/").pop()?.split(".")[0] ?? "";
     const inputFileExt = inputFile.split(".").pop();
     return new Promise((resolve, reject) => {
@@ -72,7 +72,7 @@ const splitMedia = async ({ inputFile, outputDir = "media-splitter-dist", output
             const totalFileLength = Math.ceil(duration / splitDurationMs);
             let outputFilePaths = [];
             Array.from(Array(totalFileLength).keys()).map((i) => {
-                createMedia(inputFile, outputDir, i * splitDurationMs, splitDurationMs, `${outputFileName(i, inputFileName)}.${inputFileExt}`)
+                createMedia(inputFile, outputDir, i * splitDurationMs, splitDurationMs, outputFileName(i, inputFileName, inputFileExt))
                     .then(({ outputFilePath }) => {
                     outputFilePaths.push(outputFilePath);
                     if (onProgress) {

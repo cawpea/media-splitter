@@ -23,7 +23,9 @@ console.log("media-splitter: ", options);
 splitMedia({
   inputFile: options.input,
   outputDir: options.output,
-  outputFileName: (index, defaultName) =>
-    options.name ? `${options.name}-${index}` : `${defaultName}-${index}`,
+  outputFileName: (index, defaultName, ext) =>
+    options.name
+      ? `${options.name}-${index}.${ext}`
+      : `${defaultName}-${index}.${ext}`,
   splitDurationMs: Number(options.split),
 });
